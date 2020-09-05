@@ -1,5 +1,5 @@
-let cvs= document.getElementById("canvas");
-let ctx=cvs.getContext("2d");
+let cvs= document.getElementById("canvas"); //cvs --> variable
+let ctx=cvs.getContext("2d"); // method calling , parameter -->2d
 let fire1=document.getElementById("fire1");
 let fire2=document.getElementById("fire2");
 let ending1=document.getElementById("ending1");
@@ -56,7 +56,7 @@ cvs.addEventListener("click", function(event)
             break;
         case state.gameOver:
             let cvsposition=cvs.getBoundingClientRect(); //gives width ,height etc of canvas
-            let clickX=event.clientX-cvsposition.left; //position of x axis!
+            let clickX=event.clientX-cvsposition.left; //clientX-->gives position of x axis!
             // console.log(clickX)
             let clickY=event.clientY-cvsposition.top;// position of y axis!
             // console.log(clickY)
@@ -84,7 +84,7 @@ const startbtn=
 const getReady=
 {
     sX:0,
-    sY:228,
+    sY:228,        //sY--> source y axis
     w:173,
     h:152,
     x:cvs.width/2-(173/2), //for center Position (get ready position) !
@@ -180,8 +180,8 @@ let ground=
     {
         if(state.current==state.game)
         {
-            this.x-=this.dx;  //dec value by 3!
-            if(this.x%112==0) // repeating ground!
+            this.x-=this.dx;  //dec value by 3!(moving ground)
+            if(this.x%112==0) // repeating moving ground!
             {
                 this.x=0;
             }
@@ -191,7 +191,7 @@ let ground=
 // Bird Object
 const bird=
 {
-    animation:
+    animation:   //animation is a set of frames!
     [
         {sX:276,sY:112},
         {sX:276, sY:139},
@@ -199,7 +199,7 @@ const bird=
         {sX:276, sY:139}  // repeating second Bird!
     ],
     x:50,
-    y:150,
+    y:150,      //Bird canvas position!
     w:34,
     h:26,
     frame:0,
@@ -210,7 +210,7 @@ const bird=
     radius:13,
     draw:function()
     {
-       let bird= this.animation[this.frame];
+       let bird= this.animation[this.frame];//access the bird!
        ctx.drawImage(sprite,bird.sX,bird.sY,this.w,this.h,this.x-this.w/2,this.y-this.h/2,this.w,this.h);
     },
     update:function()
@@ -227,10 +227,10 @@ const bird=
         }
         else
         {
-            this.y+=this.speed;
+            this.y+=this.speed;//higher the y axis, lower the Bird! (top to bottom has +ve value)
             this.speed+=this.gravity; 
         }
-        if(this.y+this.h/2 >=cvs.height-ground.h)
+        if(this.y+this.h/2/*(bird's center point) */>=cvs.height-ground.h)//condition when bird hits to ground collision detection
         {
             this.speed=0; 
             this.frame=0;
@@ -244,7 +244,7 @@ const bird=
     },
     move:function()
     {
-        this.speed=-this.jump;//flapping bird up
+        this.speed=-this.jump;//flapping bird up (bottom to top has -ve value)
        
     }
 
@@ -274,7 +274,7 @@ const pipes=
     {
         for(let i=0;i<this.position.length;i++)
         {
-            let p=this.position[i];
+            let p=this.position[i];//position in array
             let topYPos=p.y;
             let bottomYPos=p.y+this.h+this.gap;
 
@@ -293,7 +293,7 @@ const pipes=
         {
             return;
         }
-        if(frames%100==0)
+        if(frames%100==0) //for every 100 frames
         {
             this.position.push
             (
@@ -306,7 +306,7 @@ const pipes=
         for(let i=0;i<this.position.length;i++)
         {
             let p=this.position[i];
-            p.x-=this.dx;
+            p.x-=this.dx; // for moving pipes
 
             //for removing the pipes from the array
             if(p.x+this.w <=0)
@@ -317,7 +317,7 @@ const pipes=
                 // score increment
                 score.value+=1;
                 score.best=Math.max(score.value,score.best);
-                localStorage.setItem("best",score.best);
+                localStorage.setItem("best",score.best); // best--> key
             }
             //collison detection with pipes(top pipe)
             if(bird.x+bird.radius>p.x && bird.x-bird.radius<p.x+this.w && bird.y+bird.radius >p.y && bird.y-bird.radius<p.y+this.h)   
@@ -326,6 +326,8 @@ const pipes=
                 state.current=state.gameOver;
             }
             // collision detection with pipes(bottom pipes)
+            //tobp-->top of bottom pipe
+            //bobp-->bottom of bottom pipe
             let tobp=p.y+this.h+this.gap;
             let bobp=p.y+this.h+this.gap+this.h;
             if(bird.x+bird.radius>p.x && bird.x-bird.radius < p.x+this.w && bird.y+bird.radius>tobp && bird.y-bird.radius<bobp)
@@ -371,7 +373,7 @@ const ball=
             (
                 {
                     x:cvs.width,
-                    y:Math.random()*400,
+                    y:Math.random()*400,//generates random values of y b/w 0-400!
                 }
             );
             
@@ -381,7 +383,7 @@ const ball=
             let p=this.ball_position[i];
             p.x-=this.dx;
 
-            if(p.x+this.w<=0)
+            if(p.x+this.w<=0)//outside the canvas !
             {
                 this.ball_position.shift();
             }
@@ -411,7 +413,7 @@ const score=
         if(state.current == state.game)
         {
         ctx.font="50px teko";
-        ctx.fillText(this.value,cvs.width/2,100);
+        ctx.fillText(this.value,cvs.width/2/*(x)*/,100/*(y)*/);
         }
         else if(state.current==state.gameOver)
         {
@@ -437,8 +439,8 @@ function draw()
     color.addColorStop(0,"cyan");//0%
     color.addColorStop(0.5,"deepskyblue");//50%
     color.addColorStop(1,"cyan");//100%
-    ctx.fillStyle=color;
-    ctx.fillRect(0,0,cvs.clientWidth,cvs.height);
+    ctx.fillStyle=color; //getContext method!
+    ctx.fillRect(0,0,cvs.clientWidth,cvs.height);// x axis, y axis,width,height!
     cloud.draw();
     pipes.draw();
     ball.draw();
@@ -465,6 +467,6 @@ function loop()
     draw();
     update();
     frames++;
-    requestAnimationFrame(loop);
+    requestAnimationFrame(loop); // call's that loop , frames per sec!
 }
 loop();
